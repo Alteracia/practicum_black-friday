@@ -1,7 +1,7 @@
 services:
   mongodb1:
     container_name: mongodb1
-    image: mongo:latest #  dh-mirror.gitverse.ru/
+    image: mongo:latest #  dh-mirror.gitverse.ru/ с зеркала не загружался, ошибка в конце загрузки
     volumes:
       - mongodb1_data_container:/data/db
 
