@@ -1,3 +1,5 @@
+#!/bin/bash
+
 docker compose exec -T configSrv mongosh --port 27017 --quiet <<EOF
 rs.initiate(
   {
