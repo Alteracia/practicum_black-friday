@@ -28,16 +28,17 @@ docker compose exec -T configSrv mongosh --port 27017
 ./scripts/mongo-sharding-init_1.sh
 ```
 
-### Инициализируем шарды
+### Инициализируем шарды:
 ```shell
-docker compose exec -T shard1 mongosh --port 27018
+docker compose exec -T shard1-1 mongosh --port 27018
 
 > rs.initiate(
     {
       _id : "shard1",
       members: [
-        { _id : 0, host : "shard1:27018" },
-       // { _id : 1, host : "shard2:27019" }
+          { _id : 0, host : "shard1-1:27018" },
+          { _id : 1, host : "shard1-2:27018" },
+          { _id : 2, host : "shard1-3:27018" }
       ]
     }
 );
@@ -48,14 +49,15 @@ docker compose exec -T shard1 mongosh --port 27018
 ```
 
 ```shell
-docker compose exec -T shard2 mongosh --port 27019
+docker compose exec -T shard2-1 mongosh --port 27018
 
 > rs.initiate(
     {
       _id : "shard2",
       members: [
-       // { _id : 0, host : "shard1:27018" },
-        { _id : 1, host : "shard2:27019" }
+          { _id : 0, host : "shard2-1:27018" },
+          { _id : 1, host : "shard2-2:27018" },
+          { _id : 2, host : "shard2-3:27018" }
       ]
     }
   );
@@ -67,10 +69,10 @@ docker compose exec -T shard2 mongosh --port 27019
 
 ### Инициализируем роутер и заполняем документами
 ```shell
-docker compose exec -T mongos_router mongosh --port 27020
+docker compose exec -T mongos_router mongosh --port 27024
 
-> sh.addShard( "shard1/shard1:27018");
-> sh.addShard( "shard2/shard2:27019");
+> sh.addShard( "shard1/shard1-1:27018");
+> sh.addShard( "shard2/shard2-1:27018");
 
 > sh.enableSharding("somedb");
 > sh.shardCollection("somedb.helloDoc", { "name" : "hashed" } )
@@ -91,9 +93,9 @@ docker compose exec -T mongos_router mongosh --port 27020
 
 
 ### Базы напрямую
-#### Проверка роутера
+Проверка роутера
 ```shell
-docker exec -it mongos_router mongosh --port 27020
+docker exec -it mongos_router mongosh --port 27024
 > use somedb
 > db.helloDoc.countDocuments()
 > exit(); 
@@ -105,9 +107,9 @@ docker exec -it mongos_router mongosh --port 27020
 1000
 ```
 
-#### Проверка shard1
+Проверка shard1
 ```shell
-docker exec -it shard1 mongosh --port 27018
+docker exec -it shard1-1 mongosh --port 27018
 > use somedb
 > db.helloDoc.countDocuments()
 > exit(); 
@@ -120,9 +122,9 @@ docker exec -it shard1 mongosh --port 27018
 492
 ```
 
-#### Проверка shard2
+Проверка shard2
 ```shell
-docker exec -it shard2 mongosh --port 27019
+docker exec -it shard2-1 mongosh --port 27018
 > use somedb
 > db.helloDoc.countDocuments()
 > exit(); 
