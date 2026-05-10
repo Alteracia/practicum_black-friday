@@ -11,5 +11,5 @@ rs.initiate(
           { _id : 2, host : "shard2-3:27018" }
       ]
     }
-  );
+);
 EOF

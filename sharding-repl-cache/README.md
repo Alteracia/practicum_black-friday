@@ -100,6 +100,11 @@ echo "yes" | docker exec -i redis_1 redis-cli --cluster create redis_1:6379 redi
 docker exec -it redis_1 redis-cli cluster nodes
 ```
 
+### Тест скорости
+```shell
+./tests/test.sh
+```
+
 ### Базы напрямую
 Проверка роутера
 ```shell
