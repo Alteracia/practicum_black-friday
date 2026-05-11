@@ -86,24 +86,10 @@ docker compose exec -T mongos_router mongosh --port 27024
 ./scripts/mongo-sharding-init_4.sh
 ```
 
-### Создаем кластер Redis
-```shell
-echo "yes" | docker exec -i redis_1 redis-cli --cluster create redis_1:6379 redis_2:6379 redis_3:6379 redis_4:6379 redis_5:6379 redis_6:6379 --cluster-replicas 1
-```
 ## Проверка
 
 ### В браузере
 Откройте в браузере http://localhost:8080
-
-### Проверка Redis
-```shell
-docker exec -it redis_1 redis-cli cluster nodes
-```
-
-### Тест скорости
-```shell
-./tests/test.sh
-```
 
 ### Базы напрямую
 Проверка роутера
